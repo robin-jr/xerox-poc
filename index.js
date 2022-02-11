@@ -25,7 +25,16 @@ const createWindow = () => {
 					click: () => win.webContents.send('update-counter', -1),
 					label: "Decrement"
 				}
-			]
+			],
+		}
+		, {
+			label: 'Reload',
+			accelerator: 'Command+R',
+			click: () => {
+				console.log("reloaded");
+				win.webContents.reload();
+			},
+
 		}
 	])
 	Menu.setApplicationMenu(menu)
@@ -64,7 +73,7 @@ async function handlePrint(event) {
 				if (!success) console.log(errorType)
 			})
 		} catch (error) {
-			console.log("severe ",error);
+			console.log("severe ", error);
 		}
 		// win.webContents.printToPDF({printBackground:true}).then(data => {
 		// 	fs.writeFile(pdfPath, data, (error) => {
@@ -92,6 +101,12 @@ async function handlePrint(event) {
 	// 	}
 	// });
 }
+async function getPrinters(event) {
+	var win = BrowserWindow.fromWebContents(event.sender);
+	const res = await win.webContents.getPrintersAsync();
+	// console.log(res);
+	return res;
+}
 
 app.whenReady().then(() => {
 	ipcMain.on('counter-value', (_event, value) => {
@@ -104,4 +119,5 @@ app.whenReady().then(() => {
 	ipcMain.on('set-title', handleSetTitle)
 	ipcMain.handle('dialog:openFile', handleFileOpen)
 	ipcMain.on('print', handlePrint)
+	ipcMain.handle('getPrinters', getPrinters);
 })

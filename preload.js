@@ -1,10 +1,12 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
+
 contextBridge.exposeInMainWorld("electronApi", {
   setTitle: (title) => ipcRenderer.send("set-title", title),
   openFile: () => ipcRenderer.invoke("dialog:openFile"),
   onUpdate: (callback) => ipcRenderer.on("update-counter", callback),
-  doPrint: ()=>ipcRenderer.send('print'),
+  doPrint: () => ipcRenderer.send('print'),
+  getPrinters: () => ipcRenderer.invoke("getPrinters"),
 })
 
 
