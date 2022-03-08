@@ -68,8 +68,23 @@ async function handlePrint(event) {
 	win.webContents.on('did-finish-load', () => {
 		// Use default printing options
 		const pdfPath = path.join(os.homedir(), 'Desktop', 'temp1.pdf')
+		var options = {
+			silent: true,
+			printBackground: true,
+			color: false,
+			margin: {
+				marginType: 'printableArea'
+			},
+			landscape: false,
+			pagesPerSheet: 2,
+			collate: false,
+			copies: 3,
+			header: 'Header of the Page',
+			footer: 'Footer of the Page',
+			// deviceName:'OneNote for Windows 10'
+		}
 		try {
-			win.webContents.print((success, errorType) => {
+			win.webContents.print(options, (success, errorType) => {
 				if (!success) console.log(errorType)
 			})
 		} catch (error) {
